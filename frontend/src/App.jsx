@@ -10,6 +10,7 @@ import AdminAppointments from "./pages/AdminAppointments";
 import AdminServices from "./pages/AdminServices";
 import AddService from "./pages/AddService";
 import EditService from "./pages/EditService";
+import EditAppointment from "./pages/EditAppointment";
 
 function App() {
   return (
@@ -46,6 +47,12 @@ function App() {
         <Route path="/admin/services/edit/:id" element={
             <ProtectedRoute>
               <EditService />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin/appointments/edit/:id" element={
+            <ProtectedRoute>
+              <EditAppointment />
             </ProtectedRoute>
           }
         />

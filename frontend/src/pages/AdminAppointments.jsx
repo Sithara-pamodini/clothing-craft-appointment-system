@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { Link } from "react-router-dom";
 
 function AdminAppointments() {
   const [appointments, setAppointments] = useState([]);
 
-  useEffect(() => {
+  const loadAppointments = () => {
     api
       .get("/appointments")
       .then((response) => {
@@ -13,7 +14,26 @@ function AdminAppointments() {
       .catch((error) => {
         console.error("Error loading appointments:", error);
       });
+  };
+
+  useEffect(() => {
+    loadAppointments();
   }, []);
+
+  const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this appointment?")) {
+      return;
+    }
+
+    try {
+      await api.delete(`/appointments/${id}`);
+      alert("Appointment deleted successfully!");
+      loadAppointments();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete appointment.");
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md p-8">
@@ -31,6 +51,7 @@ function AdminAppointments() {
                 <th className="p-3 text-left">Date</th>
                 <th className="p-3 text-left">Time</th>
                 <th className="p-3 text-left">Notes</th>
+                <th className="p-3 text-left">Action</th>
               </tr>
             </thead>
 
@@ -42,6 +63,21 @@ function AdminAppointments() {
                   <td className="p-3">{appointment.appointment_date}</td>
                   <td className="p-3">{appointment.appointment_time}</td>
                   <td className="p-3">{appointment.notes}</td>
+                  <td className="p-3">
+                    <Link
+                      to={`/admin/appointments/edit/${appointment.id}`}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2"
+                    >
+                      Edit
+                    </Link>
+
+                    <button
+                      onClick={() => handleDelete(appointment.id)}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
