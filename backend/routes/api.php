@@ -8,7 +8,13 @@ use App\Http\Controllers\Api\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+
 Route::apiResource('/services', ServiceController::class);
-Route::apiResource('/appointments', AppointmentController::class);
-Route::get('/users', [UserController::class, 'index']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::apiResource('/appointments', AppointmentController::class);
+
+    Route::get('/users', [UserController::class, 'index']);
+});

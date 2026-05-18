@@ -8,17 +8,27 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(
-            Appointment::with(['user', 'service'])->latest()->get()
-        );
+        $user = $request->user();
+
+        if ($user && $user->role === 'admin') {
+            $appointments = Appointment::with(['user', 'service'])
+                ->latest()
+                ->get();
+        } else {
+            $appointments = Appointment::with(['user', 'service'])
+                ->where('user_id', $user->id)
+                ->latest()
+                ->get();
+        }
+
+        return response()->json($appointments);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'nullable|exists:users,id',
             'service_id' => 'required|exists:services,id',
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'nullable|email',
@@ -30,6 +40,10 @@ class AppointmentController extends Controller
             'payment_status' => 'nullable|string',
         ]);
 
+        if ($request->user()) {
+            $validated['user_id'] = $request->user()->id;
+        }
+
         $appointment = Appointment::create($validated);
 
         return response()->json([
@@ -38,15 +52,22 @@ class AppointmentController extends Controller
         ], 201);
     }
 
-    public function show(Appointment $appointment)
+    public function show(Request $request, Appointment $appointment)
     {
+        $user = $request->user();
+
+        if ($user->role !== 'admin' && $appointment->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
         return response()->json($appointment->load(['user', 'service']));
     }
 
     public function update(Request $request, Appointment $appointment)
     {
         $validated = $request->validate([
-            'user_id' => 'nullable|exists:users,id',
             'service_id' => 'sometimes|required|exists:services,id',
             'customer_name' => 'sometimes|required|string|max:255',
             'customer_email' => 'nullable|email',

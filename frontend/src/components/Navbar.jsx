@@ -32,6 +32,12 @@ function Navbar() {
         >
           Book Appointment
         </Link>
+        <Link
+          className="text-white hover:text-yellow-400"
+          to="/my-appointments"
+        >
+          My Appointments
+        </Link>
 
         {!token ? (
           <>

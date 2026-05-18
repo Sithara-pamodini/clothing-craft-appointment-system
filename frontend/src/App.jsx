@@ -12,6 +12,7 @@ import AddService from "./pages/AddService";
 import EditService from "./pages/EditService";
 import EditAppointment from "./pages/EditAppointment";
 import AdminCustomers from "./pages/AdminCustomers";
+import MyAppointments from "./pages/MyAppointments";
 
 function App() {
   return (
@@ -60,6 +61,12 @@ function App() {
         <Route path="/admin/customers" element={
             <ProtectedRoute adminOnly={true}>
               <AdminCustomers />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/my-appointments" element={
+            <ProtectedRoute>
+              <MyAppointments />
             </ProtectedRoute>
           }
         />

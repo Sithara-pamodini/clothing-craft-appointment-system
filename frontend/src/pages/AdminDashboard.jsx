@@ -16,11 +16,16 @@ function AdminDashboard() {
       try {
         const appointmentsResponse = await api.get("/appointments");
         const servicesResponse = await api.get("/services");
+        const usersResponse = await api.get("/users");
+
+        const customers = usersResponse.data.filter(
+          (user) => user.role === "customer"
+        );
 
         setStats({
           appointments: appointmentsResponse.data.length,
           services: servicesResponse.data.length,
-          customers: 0,
+          customers: customers.length,
         });
       } catch (error) {
         console.error("Error loading dashboard stats:", error);
