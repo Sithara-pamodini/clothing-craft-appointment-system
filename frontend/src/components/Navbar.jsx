@@ -4,6 +4,8 @@ function Navbar() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -43,23 +45,34 @@ function Navbar() {
           </>
         ) : (
           <>
-            <Link
-              className="text-white hover:text-yellow-400"
-              to="/admin/services"
-            >
-              Admin Services
-            </Link>
-            
-            <Link
-              className="text-white hover:text-yellow-400"
-              to="/admin/appointments"
-            >
-              Appointments
-            </Link>
+            {role === "admin" && (
+              <>
+                <Link
+                  className="text-white hover:text-yellow-400"
+                  to="/admin/services"
+                >
+                  Admin Services
+                </Link>
 
-            <Link className="text-white hover:text-yellow-400" to="/admin">
-              Dashboard
-            </Link>
+                <Link
+                  className="text-white hover:text-yellow-400"
+                  to="/admin/appointments"
+                >
+                  Appointments
+                </Link>
+
+                <Link
+                  className="text-white hover:text-yellow-400"
+                  to="/admin/customers"
+                >
+                  Customers
+                </Link>
+
+                <Link className="text-white hover:text-yellow-400" to="/admin">
+                  Dashboard
+                </Link>
+              </>
+            )}
 
             <button
               onClick={handleLogout}

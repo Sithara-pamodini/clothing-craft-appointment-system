@@ -11,6 +11,7 @@ import AdminServices from "./pages/AdminServices";
 import AddService from "./pages/AddService";
 import EditService from "./pages/EditService";
 import EditAppointment from "./pages/EditAppointment";
+import AdminCustomers from "./pages/AdminCustomers";
 
 function App() {
   return (
@@ -21,38 +22,44 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <AdminDashboard />
             </ProtectedRoute>
           }
         />
         <Route path="/admin/appointments" element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <AdminAppointments />
             </ProtectedRoute>
           }
         />
         <Route path="/admin/services" element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <AdminServices />
             </ProtectedRoute>
           }
         />
         <Route path="/admin/services/add" element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}  >
               <AddService />
             </ProtectedRoute>
           }
         />
         <Route path="/admin/services/edit/:id" element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <EditService />
             </ProtectedRoute>
           }
         />
         <Route path="/admin/appointments/edit/:id" element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
               <EditAppointment />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin/customers" element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminCustomers />
             </ProtectedRoute>
           }
         />
