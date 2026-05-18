@@ -50,6 +50,7 @@ function AdminAppointments() {
                 <th className="p-3 text-left">Phone</th>
                 <th className="p-3 text-left">Date</th>
                 <th className="p-3 text-left">Time</th>
+                <th className="p-3 text-left">Status</th>
                 <th className="p-3 text-left">Notes</th>
                 <th className="p-3 text-left">Action</th>
               </tr>
@@ -62,6 +63,7 @@ function AdminAppointments() {
                   <td className="p-3">{appointment.customer_phone}</td>
                   <td className="p-3">{appointment.appointment_date}</td>
                   <td className="p-3">{appointment.appointment_time}</td>
+                  <td className="p-3 capitalize">{appointment.status}</td>
                   <td className="p-3">{appointment.notes}</td>
                   <td className="p-3">
                     <Link

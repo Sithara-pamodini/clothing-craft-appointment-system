@@ -29,6 +29,17 @@ function AppointmentForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+      !formData.service_id ||
+      !formData.customer_name ||
+      !formData.customer_phone ||
+      !formData.appointment_date ||
+      !formData.appointment_time
+    ) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
     try {
       await api.post("/appointments", formData);
       alert("Appointment booked successfully!");
@@ -80,6 +91,7 @@ function AppointmentForm() {
         />
 
         <input
+          type="email"
           name="customer_email"
           placeholder="Email"
           value={formData.customer_email}
@@ -99,6 +111,7 @@ function AppointmentForm() {
         <input
           type="date"
           name="appointment_date"
+          min={new Date().toISOString().split("T")[0]}
           value={formData.appointment_date}
           onChange={handleChange}
           required

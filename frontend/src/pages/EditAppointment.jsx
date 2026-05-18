@@ -16,6 +16,7 @@ function EditAppointment() {
     appointment_date: "",
     appointment_time: "",
     notes: "",
+    status: "pending",
   });
 
   useEffect(() => {
@@ -77,8 +78,9 @@ function EditAppointment() {
         />
 
         <input
+          type="email"
           name="customer_email"
-          value={formData.customer_email}
+          value={formData.customer_email || ""}
           onChange={handleChange}
           className="border border-gray-300 rounded-lg px-4 py-3"
         />
@@ -108,6 +110,19 @@ function EditAppointment() {
           required
           className="border border-gray-300 rounded-lg px-4 py-3"
         />
+
+        <select
+          name="status"
+          value={formData.status || "pending"}
+          onChange={handleChange}
+          required
+          className="border border-gray-300 rounded-lg px-4 py-3"
+        >
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
 
         <textarea
           name="notes"

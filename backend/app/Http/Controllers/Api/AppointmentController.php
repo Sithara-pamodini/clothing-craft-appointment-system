@@ -44,6 +44,8 @@ class AppointmentController extends Controller
             $validated['user_id'] = $request->user()->id;
         }
 
+        $validated['status'] = 'pending';
+
         $appointment = Appointment::create($validated);
 
         return response()->json([
