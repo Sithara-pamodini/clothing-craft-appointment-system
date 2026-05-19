@@ -31,6 +31,7 @@ function MyAppointments() {
               <p><strong>Name:</strong> {appointment.customer_name}</p>
               <p><strong>Date:</strong> {appointment.appointment_date}</p>
               <p><strong>Time:</strong> {appointment.appointment_time}</p>
+              <p><strong>Status:</strong> <span className="capitalize">{appointment.status}</span></p>
               <p><strong>Notes:</strong> {appointment.notes}</p>
             </div>
           ))}
