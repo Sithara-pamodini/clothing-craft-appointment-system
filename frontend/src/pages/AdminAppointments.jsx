@@ -5,6 +5,7 @@ import { Pencil, Trash2 } from "lucide-react";
 
 function AdminAppointments() {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getStatusBadgeClass = (status) => {
     switch (status) {
@@ -26,9 +27,11 @@ function AdminAppointments() {
       .get("/appointments")
       .then((response) => {
         setAppointments(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error loading appointments:", error);
+        setLoading(false);
       });
   };
 
@@ -55,11 +58,15 @@ function AdminAppointments() {
     <div className="bg-white rounded-xl shadow-md p-8">
       <h1 className="text-3xl font-bold mb-6">Manage Appointments</h1>
 
-      {appointments.length === 0 ? (
+      {loading ? (
+        <div className="bg-white rounded-xl shadow-md p-8 text-center">
+          <p className="text-gray-600">Loading appointments...</p>
+        </div>
+      ) : appointments.length === 0 ? (
         <p className="text-gray-600">No appointments found.</p>
       ) : (
         <>
-          <div className="hidden md:block overflow-x-auto">
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full border border-gray-200 table-fixed">
               <thead className="bg-zinc-900 text-white">
                 <tr>
@@ -136,7 +143,7 @@ function AdminAppointments() {
             </table>
           </div>
 
-          <div className="md:hidden space-y-4">
+          <div className="lg:hidden space-y-4">
             {appointments.map((appointment) => (
               <div
                 key={appointment.id}
@@ -147,6 +154,7 @@ function AdminAppointments() {
                     <h3 className="font-bold text-lg">
                       {appointment.customer_name}
                     </h3>
+
                     <p className="text-sm text-gray-600">
                       {appointment.service?.name || "N/A"}
                     </p>
@@ -165,12 +173,15 @@ function AdminAppointments() {
                   <p>
                     <strong>Phone:</strong> {appointment.customer_phone}
                   </p>
+
                   <p>
                     <strong>Date:</strong> {appointment.appointment_date}
                   </p>
+
                   <p>
                     <strong>Time:</strong> {appointment.appointment_time}
                   </p>
+
                   <p>
                     <strong>Notes:</strong> {appointment.notes || "N/A"}
                   </p>

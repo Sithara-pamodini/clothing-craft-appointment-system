@@ -27,7 +27,7 @@ function Navbar() {
     <nav className="bg-zinc-900 px-6 lg:px-8 py-5">
       <div className="flex items-center justify-between">
         <h1 className="text-white text-2xl lg:text-3xl font-bold">
-          Clothing Craft
+          Nilu Fashion
         </h1>
 
         <button
@@ -37,26 +37,26 @@ function Navbar() {
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
 
-        <div className="hidden lg:flex gap-8 items-center">
-          <Link className="text-white hover:text-yellow-400" to="/">
+        <div className="hidden lg:flex gap-3 md:gap-4 xl:gap-8 items-center">
+          <Link className="text-white hover:text-yellow-400 text-center" to="/">
             Services
           </Link>
 
-          <Link className="text-white hover:text-yellow-400" to="/book-appointment">
+          <Link className="text-white hover:text-yellow-400 text-center" to="/book-appointment">
             Book Appointment
           </Link>
 
-          <Link className="text-white hover:text-yellow-400" to="/my-appointments">
+          <Link className="text-white hover:text-yellow-400 text-center" to="/my-appointments">
             My Appointments
           </Link>
 
           {!token ? (
             <>
-              <Link className="text-white hover:text-yellow-400" to="/login">
+              <Link className="text-white hover:text-yellow-400 text-center" to="/login">
                 Login
               </Link>
 
-              <Link className="text-white hover:text-yellow-400" to="/register">
+              <Link className="text-white hover:text-yellow-400 text-center" to="/register">
                 Register
               </Link>
             </>
@@ -64,19 +64,19 @@ function Navbar() {
             <>
               {role === "admin" && (
                 <>
-                  <Link className="text-white hover:text-yellow-400" to="/admin/services">
+                  <Link className="text-white hover:text-yellow-400 text-center" to="/admin/services">
                     Admin Services
                   </Link>
 
-                  <Link className="text-white hover:text-yellow-400" to="/admin/appointments">
+                  <Link className="text-white hover:text-yellow-400 text-center" to="/admin/appointments">
                     Appointments
                   </Link>
 
-                  <Link className="text-white hover:text-yellow-400" to="/admin/customers">
+                  <Link className="text-white hover:text-yellow-400 text-center" to="/admin/customers">
                     Customers
                   </Link>
 
-                  <Link className="text-white hover:text-yellow-400" to="/admin">
+                  <Link className="text-white hover:text-yellow-400 text-center" to="/admin">
                     Dashboard
                   </Link>
                 </>

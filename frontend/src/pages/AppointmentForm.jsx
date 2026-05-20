@@ -60,18 +60,21 @@ function AppointmentForm() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
+    <div className="bg-white rounded-xl shadow-md p-5 md:p-8 max-w-4xl mx-auto">
+      <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8">
         Book Appointment
       </h1>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5"
+      >
         <select
           name="service_id"
           value={formData.service_id}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg px-4 py-3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         >
           <option value="">Select Service</option>
           {services.map((service) => (
@@ -87,7 +90,7 @@ function AppointmentForm() {
           value={formData.customer_name}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg px-4 py-3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         />
 
         <input
@@ -96,7 +99,7 @@ function AppointmentForm() {
           placeholder="Email"
           value={formData.customer_email}
           onChange={handleChange}
-          className="border border-gray-300 rounded-lg px-4 py-3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         />
 
         <input
@@ -105,7 +108,7 @@ function AppointmentForm() {
           value={formData.customer_phone}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg px-4 py-3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         />
 
         <input
@@ -115,7 +118,7 @@ function AppointmentForm() {
           value={formData.appointment_date}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg px-4 py-3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         />
 
         <input
@@ -124,7 +127,7 @@ function AppointmentForm() {
           value={formData.appointment_time}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg px-4 py-3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         />
 
         <textarea
@@ -132,12 +135,13 @@ function AppointmentForm() {
           placeholder="Notes"
           value={formData.notes}
           onChange={handleChange}
-          className="border border-gray-300 rounded-lg px-4 py-3 md:col-span-2"
+          rows="4"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 lg:col-span-2 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         ></textarea>
 
         <button
           type="submit"
-          className="bg-zinc-900 text-white rounded-lg px-6 py-3 hover:bg-zinc-700 md:col-span-2"
+          className="w-full bg-zinc-900 text-white rounded-lg px-6 py-3 hover:bg-zinc-700 lg:col-span-2"
         >
           Book Appointment
         </button>

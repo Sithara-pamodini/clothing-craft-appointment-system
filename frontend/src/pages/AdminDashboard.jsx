@@ -42,7 +42,7 @@ function AdminDashboard() {
       </h1>
 
       <p className="text-gray-600 mb-2">
-        Welcome back,
+        Welcome back, {user?.name}
       </p>
 
       <h2 className="text-xl font-semibold">
@@ -50,46 +50,46 @@ function AdminDashboard() {
       </h2>
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-zinc-900 text-white rounded-xl p-6">
-          <h3 className="text-lg font-bold">Appointments</h3>
-          <p className="mt-2 text-3xl font-bold">
+        <div className="bg-zinc-900 text-white rounded-xl p-6 text-center">
+          <h3 className="text-xl md:text-xl font-bold">Appointments</h3>
+          <p className="mt-2 text-2xl font-bold">
             {stats.appointments}
           </p>
         </div>
 
-        <div className="bg-yellow-500 text-white rounded-xl p-6">
-          <h3 className="text-lg font-bold">Services</h3>
-          <p className="mt-2 text-3xl font-bold">
+        <div className="bg-yellow-500 text-white rounded-xl p-6 text-center">
+          <h3 className="text-xl md:text-xl font-bold">Services</h3>
+          <p className="mt-2 text-2xl font-bold">
             {stats.services}
           </p>
         </div>
 
-        <div className="bg-green-600 text-white rounded-xl p-6">
-          <h3 className="text-lg font-bold">Customers</h3>
-          <p className="mt-2 text-3xl font-bold">
+        <div className="bg-green-600 text-white rounded-xl p-6 text-center">
+          <h3 className="text-xl md:text-xl font-bold">Customers</h3>
+          <p className="mt-2 text-2xl font-bold">
             {stats.customers}
           </p>
         </div>
       </div>
 
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex flex-col sm:flex-row gap-4">
         <Link
           to="/admin/appointments"
-          className="inline-block bg-zinc-900 text-white px-6 py-3 rounded-lg hover:bg-zinc-700"
+          className="inline-block bg-zinc-900 text-white px-6 py-3 rounded-lg hover:bg-zinc-700 text-center"
         >
           Manage Appointments
         </Link>
 
         <Link
           to="/admin/services"
-          className="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600"
+          className="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 text-center"
         >
           Manage Services
         </Link>
 
         <Link
           to="/admin/customers"
-          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
+          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 text-center"
         >
           Manage Customers
         </Link>
