@@ -79,6 +79,9 @@ function Navbar() {
                   <Link className="text-white hover:text-yellow-400 text-center" to="/admin">
                     Dashboard
                   </Link>
+                  <Link to="/admin/reports" className="text-white hover:text-yellow-400 text-center">
+                    Reports
+                  </Link>
                 </>
               )}
 

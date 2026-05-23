@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 
-function EditAppointment() {
+function EditMyAppointment() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -19,9 +19,6 @@ function EditAppointment() {
     fabric_details: "",
     design_preferences: "",
     alteration_details: "",
-    status: "pending",
-    payment_status: "unpaid",
-    refund_status: "",
   });
 
   useEffect(() => {
@@ -43,9 +40,6 @@ function EditAppointment() {
         fabric_details: appointment.fabric_details || "",
         design_preferences: appointment.design_preferences || "",
         alteration_details: appointment.alteration_details || "",
-        status: appointment.status || "pending",
-        payment_status: appointment.payment_status || "unpaid",
-        refund_status: appointment.refund_status || "",
       });
     });
   }, [id]);
@@ -60,26 +54,23 @@ function EditAppointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedAppointment = {
-      service_id: formData.service_id,
-      customer_name: formData.customer_name,
-      customer_email: formData.customer_email,
-      customer_phone: formData.customer_phone,
-      appointment_date: formData.appointment_date,
-      appointment_time: formData.appointment_time,
-      notes: formData.notes,
-      fabric_details: formData.fabric_details,
-      design_preferences: formData.design_preferences,
-      alteration_details: formData.alteration_details,
-      status: formData.status,
-      payment_status: formData.payment_status,
-      refund_status: formData.refund_status,
-    };
-
     try {
-      await api.put(`/appointments/${id}`, updatedAppointment);
-      alert("Appointment updated successfully!");
-      navigate("/admin/appointments");
+      await api.put(`/appointments/${id}`, {
+        service_id: formData.service_id,
+        customer_name: formData.customer_name,
+        customer_email: formData.customer_email,
+        customer_phone: formData.customer_phone,
+        appointment_date: formData.appointment_date,
+        appointment_time: formData.appointment_time,
+        notes: formData.notes,
+        fabric_details: formData.fabric_details,
+        design_preferences: formData.design_preferences,
+        alteration_details: formData.alteration_details,
+        status: "pending",
+      });
+
+      alert("Appointment update request submitted successfully!");
+      navigate("/my-appointments");
     } catch (error) {
       console.error(error);
       alert("Failed to update appointment.");
@@ -89,7 +80,7 @@ function EditAppointment() {
   return (
     <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-5 md:p-8">
       <h1 className="text-2xl md:text-3xl font-bold mb-6">
-        Edit Appointment
+        Edit My Appointment
       </h1>
 
       <form
@@ -141,6 +132,7 @@ function EditAppointment() {
         <input
           type="date"
           name="appointment_date"
+          min={new Date().toISOString().split("T")[0]}
           value={formData.appointment_date}
           onChange={handleChange}
           required
@@ -155,44 +147,6 @@ function EditAppointment() {
           required
           className="border border-gray-300 rounded-lg px-4 py-3"
         />
-
-        <select
-          name="status"
-          value={formData.status || "pending"}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        >
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-
-        <select
-          name="payment_status"
-          value={formData.payment_status || "unpaid"}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        >
-          <option value="unpaid">Unpaid</option>
-          <option value="paid">Paid</option>
-          <option value="refunded">Refunded</option>
-        </select>
-
-        <select
-          name="refund_status"
-          value={formData.refund_status || ""}
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg px-4 py-3 md:col-span-2"
-        >
-          <option value="">No Refund</option>
-          <option value="requested">Refund Requested</option>
-          <option value="approved">Refund Approved</option>
-          <option value="rejected">Refund Rejected</option>
-          <option value="processed">Refund Processed</option>
-        </select>
 
         <textarea
           name="notes"
@@ -234,11 +188,11 @@ function EditAppointment() {
           type="submit"
           className="bg-zinc-900 text-white rounded-lg px-6 py-3 hover:bg-zinc-700 md:col-span-2"
         >
-          Update Appointment
+          Submit Update Request
         </button>
       </form>
     </div>
   );
 }
 
-export default EditAppointment;
+export default EditMyAppointment;

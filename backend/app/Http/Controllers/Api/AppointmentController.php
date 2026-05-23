@@ -36,15 +36,22 @@ class AppointmentController extends Controller
             'appointment_date' => 'required|date',
             'appointment_time' => 'required',
             'notes' => 'nullable|string',
+
+            'fabric_details' => 'nullable|string',
+            'design_preferences' => 'nullable|string',
+            'alteration_details' => 'nullable|string',
+
             'status' => 'nullable|string',
             'payment_status' => 'nullable|string',
+            'refund_status' => 'nullable|string',
         ]);
 
         if ($request->user()) {
             $validated['user_id'] = $request->user()->id;
         }
 
-        $validated['status'] = 'pending';
+        $validated['status'] = $validated['status'] ?? 'pending';
+        $validated['payment_status'] = $validated['payment_status'] ?? 'unpaid';
 
         $appointment = Appointment::create($validated);
 
@@ -77,8 +84,14 @@ class AppointmentController extends Controller
             'appointment_date' => 'sometimes|required|date',
             'appointment_time' => 'sometimes|required',
             'notes' => 'nullable|string',
+
+            'fabric_details' => 'nullable|string',
+            'design_preferences' => 'nullable|string',
+            'alteration_details' => 'nullable|string',
+
             'status' => 'nullable|string',
             'payment_status' => 'nullable|string',
+            'refund_status' => 'nullable|string',
         ]);
 
         $appointment->update($validated);
@@ -95,6 +108,62 @@ class AppointmentController extends Controller
 
         return response()->json([
             'message' => 'Appointment deleted successfully',
+        ]);
+    }
+
+    public function summaryReport()
+    {
+        $totalAppointments = Appointment::count();
+        $pendingAppointments = Appointment::where('status', 'pending')->count();
+        $confirmedAppointments = Appointment::where('status', 'confirmed')->count();
+        $completedAppointments = Appointment::where('status', 'completed')->count();
+        $cancelledAppointments = Appointment::where('status', 'cancelled')->count();
+
+        $paidAppointments = Appointment::where('payment_status', 'paid')->count();
+        $unpaidAppointments = Appointment::where('payment_status', 'unpaid')->count();
+        $refundRequests = Appointment::where('refund_status', 'requested')->count();
+
+        $appointmentsByService = Appointment::with('service')
+        ->selectRaw('service_id, COUNT(*) as total')
+        ->groupBy('service_id')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'service_name' => $item->service->name ?? 'N/A',
+                'total' => $item->total,
+            ];
+        });
+
+        $monthlyAppointments = Appointment::selectRaw('MONTH(appointment_date) as month, COUNT(*) as total')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
+
+        $customerPreferences = Appointment::with('service')
+        ->selectRaw('service_id, COUNT(*) as total')
+        ->groupBy('service_id')
+        ->orderByDesc('total')
+        ->limit(5)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'service_name' => $item->service->name ?? 'N/A',
+                'total' => $item->total,
+            ];
+        });
+
+        return response()->json([
+            'total_appointments' => $totalAppointments,
+            'pending_appointments' => $pendingAppointments,
+            'confirmed_appointments' => $confirmedAppointments,
+            'completed_appointments' => $completedAppointments,
+            'cancelled_appointments' => $cancelledAppointments,
+            'paid_appointments' => $paidAppointments,
+            'unpaid_appointments' => $unpaidAppointments,
+            'refund_requests' => $refundRequests,
+            'appointments_by_service' => $appointmentsByService,
+            'monthly_appointments' => $monthlyAppointments,
+            'customer_preferences' => $customerPreferences,
         ]);
     }
 }

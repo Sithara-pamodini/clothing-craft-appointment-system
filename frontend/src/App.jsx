@@ -13,6 +13,10 @@ import EditService from "./pages/EditService";
 import EditAppointment from "./pages/EditAppointment";
 import AdminCustomers from "./pages/AdminCustomers";
 import MyAppointments from "./pages/MyAppointments";
+import AddAppointment from "./pages/AddAppointment";
+import EditMyAppointment from "./pages/EditMyAppointment";
+import RequestRefund from "./pages/RequestRefund";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -27,7 +31,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Services />} />
               <Route path="/book-appointment" element={<AppointmentForm />} />
-
               <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
               <Route path="/admin/appointments" element={<ProtectedRoute adminOnly={true}><AdminAppointments /></ProtectedRoute>} />
               <Route path="/admin/services" element={<ProtectedRoute adminOnly={true}><AdminServices /></ProtectedRoute>} />
@@ -35,8 +38,11 @@ function App() {
               <Route path="/admin/services/edit/:id" element={<ProtectedRoute adminOnly={true}><EditService /></ProtectedRoute>} />
               <Route path="/admin/appointments/edit/:id" element={<ProtectedRoute adminOnly={true}><EditAppointment /></ProtectedRoute>} />
               <Route path="/admin/customers" element={<ProtectedRoute adminOnly={true}><AdminCustomers /></ProtectedRoute>} />
-
               <Route path="/my-appointments" element={<ProtectedRoute><MyAppointments /></ProtectedRoute>} />
+              <Route path="/admin/appointments/add" element={<ProtectedRoute adminOnly={true}><AddAppointment /></ProtectedRoute>} />
+              <Route path="/my-appointments/edit/:id" element={<ProtectedRoute><EditMyAppointment /></ProtectedRoute>} />
+              <Route path="/my-appointments/refund/:id" element={<ProtectedRoute><RequestRefund /></ProtectedRoute>} />
+              <Route path="/admin/reports" element={<ProtectedRoute adminOnly={true}><Reports /></ProtectedRoute>} />
             </Routes>
           </Layout>
         }

@@ -17,4 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/appointments', AppointmentController::class);
 
     Route::get('/users', [UserController::class, 'index']);
+
+    Route::get('/reports/summary', [AppointmentController::class, 'summaryReport']);
 });

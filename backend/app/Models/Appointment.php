@@ -16,7 +16,13 @@ class Appointment extends Model
         'appointment_time',
         'notes',
         'status',
+
+        'fabric_details',
+        'design_preferences',
+        'alteration_details',
+
         'payment_status',
+        'refund_status',
     ];
 
     public function user()

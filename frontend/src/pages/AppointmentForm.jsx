@@ -3,7 +3,8 @@ import api from "../services/api";
 
 function AppointmentForm() {
   const [services, setServices] = useState([]);
-  const [formData, setFormData] = useState({
+
+  const initialFormData = {
     service_id: "",
     customer_name: "",
     customer_email: "",
@@ -11,7 +12,12 @@ function AppointmentForm() {
     appointment_date: "",
     appointment_time: "",
     notes: "",
-  });
+    fabric_details: "",
+    design_preferences: "",
+    alteration_details: "",
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
     api.get("/services").then((response) => {
@@ -43,16 +49,7 @@ function AppointmentForm() {
     try {
       await api.post("/appointments", formData);
       alert("Appointment booked successfully!");
-
-      setFormData({
-        service_id: "",
-        customer_name: "",
-        customer_email: "",
-        customer_phone: "",
-        appointment_date: "",
-        appointment_time: "",
-        notes: "",
-      });
+      setFormData(initialFormData);
     } catch (error) {
       console.error(error);
       alert("Failed to book appointment.");
@@ -136,6 +133,33 @@ function AppointmentForm() {
           value={formData.notes}
           onChange={handleChange}
           rows="4"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 lg:col-span-2 focus:outline-none focus:ring-2 focus:ring-zinc-300"
+        ></textarea>
+
+        <textarea
+          name="fabric_details"
+          placeholder="Fabric Details"
+          value={formData.fabric_details}
+          onChange={handleChange}
+          rows="3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 lg:col-span-2 focus:outline-none focus:ring-2 focus:ring-zinc-300"
+        ></textarea>
+
+        <textarea
+          name="design_preferences"
+          placeholder="Design Preferences"
+          value={formData.design_preferences}
+          onChange={handleChange}
+          rows="3"
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 lg:col-span-2 focus:outline-none focus:ring-2 focus:ring-zinc-300"
+        ></textarea>
+
+        <textarea
+          name="alteration_details"
+          placeholder="Alteration Details"
+          value={formData.alteration_details}
+          onChange={handleChange}
+          rows="3"
           className="w-full border border-gray-300 rounded-lg px-4 py-3 lg:col-span-2 focus:outline-none focus:ring-2 focus:ring-zinc-300"
         ></textarea>
 
