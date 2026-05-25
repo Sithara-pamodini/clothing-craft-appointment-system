@@ -11,12 +11,18 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::apiResource('/services', ServiceController::class);
 
+Route::post('/appointments', [AppointmentController::class, 'store']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::apiResource('/appointments', AppointmentController::class);
+    Route::get('/appointments', [AppointmentController::class, 'index']);
+    Route::get('/appointments/{appointment}', [AppointmentController::class, 'show']);
+    Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']);
+    Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']);
 
     Route::get('/users', [UserController::class, 'index']);
+    Route::put('/users/{user}/availability', [UserController::class, 'updateAvailability']);
 
     Route::get('/reports/summary', [AppointmentController::class, 'summaryReport']);
 });

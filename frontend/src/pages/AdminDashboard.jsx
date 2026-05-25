@@ -9,6 +9,9 @@ function AdminDashboard() {
     appointments: 0,
     services: 0,
     customers: 0,
+    availableStaff: 0,
+    busyStaff: 0,
+    unavailableStaff: 0,
   });
 
   useEffect(() => {
@@ -22,10 +25,23 @@ function AdminDashboard() {
           (user) => user.role === "customer"
         );
 
+        const staffUsers = usersResponse.data.filter(
+          (user) => user.role === "admin"
+        );
+
         setStats({
           appointments: appointmentsResponse.data.length,
           services: servicesResponse.data.length,
           customers: customers.length,
+          availableStaff: staffUsers.filter(
+            (user) => (user.availability_status || "available") === "available"
+          ).length,
+          busyStaff: staffUsers.filter(
+            (user) => user.availability_status === "busy"
+          ).length,
+          unavailableStaff: staffUsers.filter(
+            (user) => user.availability_status === "unavailable"
+          ).length,
         });
       } catch (error) {
         console.error("Error loading dashboard stats:", error);
@@ -36,8 +52,8 @@ function AdminDashboard() {
   }, []);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8">
-      <h1 className="text-3xl font-bold mb-4">
+    <div className="bg-white rounded-xl shadow-md p-5 md:p-8">
+      <h1 className="text-2xl md:text-3xl font-bold mb-4">
         Admin Dashboard
       </h1>
 
@@ -51,24 +67,45 @@ function AdminDashboard() {
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-zinc-900 text-white rounded-xl p-6 text-center">
-          <h3 className="text-xl md:text-xl font-bold">Appointments</h3>
-          <p className="mt-2 text-2xl font-bold">
-            {stats.appointments}
-          </p>
+          <h3 className="text-xl font-bold">Appointments</h3>
+          <p className="mt-2 text-2xl font-bold">{stats.appointments}</p>
         </div>
 
         <div className="bg-yellow-500 text-white rounded-xl p-6 text-center">
-          <h3 className="text-xl md:text-xl font-bold">Services</h3>
-          <p className="mt-2 text-2xl font-bold">
-            {stats.services}
-          </p>
+          <h3 className="text-xl font-bold">Services</h3>
+          <p className="mt-2 text-2xl font-bold">{stats.services}</p>
         </div>
 
         <div className="bg-green-600 text-white rounded-xl p-6 text-center">
-          <h3 className="text-xl md:text-xl font-bold">Customers</h3>
-          <p className="mt-2 text-2xl font-bold">
-            {stats.customers}
-          </p>
+          <h3 className="text-xl font-bold">Customers</h3>
+          <p className="mt-2 text-2xl font-bold">{stats.customers}</p>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-xl font-bold mb-4">Staff Availability</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="border border-green-200 bg-green-50 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-bold text-green-800">Available</h3>
+            <p className="mt-2 text-2xl font-bold text-green-800">
+              {stats.availableStaff}
+            </p>
+          </div>
+
+          <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-bold text-yellow-800">Busy</h3>
+            <p className="mt-2 text-2xl font-bold text-yellow-800">
+              {stats.busyStaff}
+            </p>
+          </div>
+
+          <div className="border border-red-200 bg-red-50 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-bold text-red-800">Unavailable</h3>
+            <p className="mt-2 text-2xl font-bold text-red-800">
+              {stats.unavailableStaff}
+            </p>
+          </div>
         </div>
       </div>
 
