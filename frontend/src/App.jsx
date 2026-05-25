@@ -17,6 +17,8 @@ import AddAppointment from "./pages/AddAppointment";
 import EditMyAppointment from "./pages/EditMyAppointment";
 import RequestRefund from "./pages/RequestRefund";
 import Reports from "./pages/Reports";
+import AddUser from "./pages/AddUser";
+import EditUser from "./pages/EditUser";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
               <Route path="/my-appointments/edit/:id" element={<ProtectedRoute><EditMyAppointment /></ProtectedRoute>} />
               <Route path="/my-appointments/refund/:id" element={<ProtectedRoute><RequestRefund /></ProtectedRoute>} />
               <Route path="/admin/reports" element={<ProtectedRoute adminOnly={true}><Reports /></ProtectedRoute>} />
+              <Route path="/admin/users/add" element={<ProtectedRoute adminOnly={true}><AddUser /></ProtectedRoute>} />
+              <Route path="/admin/users/edit/:id" element={<ProtectedRoute adminOnly={true}><EditUser /></ProtectedRoute>} />
             </Routes>
           </Layout>
         }

@@ -22,6 +22,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']);
 
     Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
     Route::put('/users/{user}/availability', [UserController::class, 'updateAvailability']);
 
     Route::get('/reports/summary', [AppointmentController::class, 'summaryReport']);

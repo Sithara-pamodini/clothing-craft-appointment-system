@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { Link } from "react-router-dom";
+import { Pencil, Trash2 } from "lucide-react";
 
 function AdminCustomers() {
   const [customers, setCustomers] = useState([]);
@@ -48,11 +50,35 @@ function AdminCustomers() {
     }
   };
 
+  const handleDelete = async (userId) => {
+    if (!confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+
+    try {
+      await api.delete(`/users/${userId}`);
+      alert("User deleted successfully!");
+      loadCustomers();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete user.");
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-md p-5 md:p-8">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">
-        Manage Customers
-      </h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold">
+          Manage Customers
+        </h1>
+
+        <Link
+          to="/admin/users/add"
+          className="bg-zinc-900 text-white px-5 py-2 rounded-lg hover:bg-zinc-700 text-center"
+        >
+          Add User
+        </Link>
+      </div>
 
       {loading ? (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
@@ -66,10 +92,11 @@ function AdminCustomers() {
             <table className="w-full border border-gray-200 table-fixed">
               <thead className="bg-zinc-900 text-white">
                 <tr>
-                  <th className="p-3 text-left w-[25%]">Name</th>
-                  <th className="p-3 text-left w-[35%]">Email</th>
-                  <th className="p-3 text-left w-[15%]">Role</th>
-                  <th className="p-3 text-left w-[25%]">Availability</th>
+                  <th className="p-3 text-left w-[22%]">Name</th>
+                  <th className="p-3 text-left w-[30%]">Email</th>
+                  <th className="p-3 text-left w-[12%]">Role</th>
+                  <th className="p-3 text-left w-[24%]">Availability</th>
+                  <th className="p-3 text-left w-[12%]">Action</th>
                 </tr>
               </thead>
 
@@ -112,6 +139,26 @@ function AdminCustomers() {
                           <option value="busy">Busy</option>
                           <option value="unavailable">Unavailable</option>
                         </select>
+                      </div>
+                    </td>
+
+                    <td className="p-3 align-middle">
+                      <div className="flex items-center gap-2">
+                        <Link
+                          to={`/admin/users/edit/${customer.id}`}
+                          title="Edit User"
+                          className="w-9 h-9 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center"
+                        >
+                          <Pencil size={18} />
+                        </Link>
+
+                        <button
+                          onClick={() => handleDelete(customer.id)}
+                          title="Delete User"
+                          className="w-9 h-9 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center justify-center"
+                        >
+                          <Trash2 size={18} />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -163,6 +210,24 @@ function AdminCustomers() {
                       <option value="unavailable">Unavailable</option>
                     </select>
                   </div>
+                </div>
+
+                <div className="flex gap-2 mt-4">
+                  <Link
+                    to={`/admin/users/edit/${customer.id}`}
+                    title="Edit User"
+                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center"
+                  >
+                    <Pencil size={18} />
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(customer.id)}
+                    title="Delete User"
+                    className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center"
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </div>
               </div>
             ))}
