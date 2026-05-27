@@ -168,12 +168,21 @@ function MyAppointments() {
                 </h2>
               </div>
 
-              <Link
-                to="/services"
-                className="inline-flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition"
-              >
-                Book New Appointment
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  to="/my-calendar"
+                  className="inline-flex items-center justify-center bg-white border border-gray-300 text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition"
+                >
+                  My Calendar
+                </Link>
+
+                <Link
+                  to="/services"
+                  className="inline-flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition"
+                >
+                  Book New Appointment
+                </Link>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">

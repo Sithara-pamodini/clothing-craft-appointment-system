@@ -134,7 +134,7 @@ function AdminDashboard() {
               </p>
             </div>
 
-            <div className="bg-white border rounded-3xl px-6 py-5 shadow-sm">
+            <div className="bg-white border rounded-3xl px-6 py-5 shadow-sm text-center">
               <p className="text-sm text-gray-500">Logged in as</p>
               <p className="text-2xl font-bold">{user?.name || "Admin"}</p>
               <p className="text-sm text-pink-700 capitalize mt-1">
@@ -258,12 +258,19 @@ function AdminDashboard() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full lg:w-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full lg:w-auto">
               <Link
                 to="/admin/appointments"
                 className="bg-white text-gray-900 px-5 py-3 rounded-full font-semibold hover:bg-gray-100 text-center transition"
               >
                 Appointments
+              </Link>
+
+              <Link
+                to="/admin/calendar"
+                className="bg-white text-gray-900 px-5 py-3 rounded-full font-semibold hover:bg-gray-100 text-center transition"
+              >
+                Calendar
               </Link>
 
               <Link

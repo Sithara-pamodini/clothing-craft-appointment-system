@@ -20,6 +20,8 @@ import Reports from "./pages/Reports";
 import AddUser from "./pages/AddUser";
 import EditUser from "./pages/EditUser";
 import Home from "./pages/Home";
+import AdminCalendar from "./pages/AdminCalendar";
+import MyCalendar from "./pages/MyCalendar";
 
 function App() {
   return (
@@ -49,6 +51,8 @@ function App() {
               <Route path="/admin/reports" element={<ProtectedRoute adminOnly={true}><Reports /></ProtectedRoute>} />
               <Route path="/admin/users/add" element={<ProtectedRoute adminOnly={true}><AddUser /></ProtectedRoute>} />
               <Route path="/admin/users/edit/:id" element={<ProtectedRoute adminOnly={true}><EditUser /></ProtectedRoute>} />
+              <Route path="/admin/calendar" element={<ProtectedRoute adminOnly={true}><AdminCalendar /></ProtectedRoute>} />
+              <Route path="/my-calendar" element={<ProtectedRoute><MyCalendar /></ProtectedRoute>} />
             </Routes>
           </Layout>
         }
