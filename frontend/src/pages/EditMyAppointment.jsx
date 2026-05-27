@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock,
+  Save,
+  Shirt,
+  FileText,
+} from "lucide-react";
 import api from "../services/api";
 
 function EditMyAppointment() {
@@ -7,6 +15,7 @@ function EditMyAppointment() {
   const navigate = useNavigate();
 
   const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     service_id: "",
@@ -22,26 +31,35 @@ function EditMyAppointment() {
   });
 
   useEffect(() => {
-    api.get("/services").then((response) => {
-      setServices(response.data);
-    });
+    const loadData = async () => {
+      try {
+        const servicesResponse = await api.get("/services");
+        setServices(servicesResponse.data);
 
-    api.get(`/appointments/${id}`).then((response) => {
-      const appointment = response.data;
+        const appointmentResponse = await api.get(`/appointments/${id}`);
+        const appointment = appointmentResponse.data;
 
-      setFormData({
-        service_id: appointment.service_id || "",
-        customer_name: appointment.customer_name || "",
-        customer_email: appointment.customer_email || "",
-        customer_phone: appointment.customer_phone || "",
-        appointment_date: appointment.appointment_date || "",
-        appointment_time: appointment.appointment_time || "",
-        notes: appointment.notes || "",
-        fabric_details: appointment.fabric_details || "",
-        design_preferences: appointment.design_preferences || "",
-        alteration_details: appointment.alteration_details || "",
-      });
-    });
+        setFormData({
+          service_id: appointment.service_id || "",
+          customer_name: appointment.customer_name || "",
+          customer_email: appointment.customer_email || "",
+          customer_phone: appointment.customer_phone || "",
+          appointment_date: appointment.appointment_date || "",
+          appointment_time: appointment.appointment_time || "",
+          notes: appointment.notes || "",
+          fabric_details: appointment.fabric_details || "",
+          design_preferences: appointment.design_preferences || "",
+          alteration_details: appointment.alteration_details || "",
+        });
+      } catch (error) {
+        console.error("Error loading appointment:", error);
+        alert("Failed to load appointment details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [id]);
 
   const handleChange = (e) => {
@@ -53,6 +71,17 @@ function EditMyAppointment() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      !formData.service_id ||
+      !formData.customer_name ||
+      !formData.customer_phone ||
+      !formData.appointment_date ||
+      !formData.appointment_time
+    ) {
+      alert("Please fill all required fields.");
+      return;
+    }
 
     try {
       await api.put(`/appointments/${id}`, {
@@ -78,119 +107,267 @@ function EditMyAppointment() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-5 md:p-8">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">
-        Edit My Appointment
-      </h1>
+    <div className="min-h-screen bg-[#fffaf7] text-gray-900">
+      <section className="bg-gradient-to-br from-pink-50 via-white to-orange-50 border-b">
+        <div className="max-w-5xl mx-auto px-4 py-12 md:py-16 text-center">
+          <p className="uppercase tracking-[0.3em] text-sm text-pink-700 font-semibold mb-4">
+            Nilu Fashion
+          </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-5"
-      >
-        <select
-          name="service_id"
-          value={formData.service_id}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        >
-          <option value="">Select Service</option>
-          {services.map((service) => (
-            <option key={service.id} value={service.id}>
-              {service.name}
-            </option>
-          ))}
-        </select>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+            Edit Appointment
+          </h1>
 
-        <input
-          name="customer_name"
-          placeholder="Customer Name"
-          value={formData.customer_name}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        />
+          <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+            Update your appointment details, service selection, fabric
+            information, design preferences, or alteration requirements.
+          </p>
+        </div>
+      </section>
 
-        <input
-          type="email"
-          name="customer_email"
-          placeholder="Email"
-          value={formData.customer_email || ""}
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        />
+      <section className="max-w-5xl mx-auto px-4 py-10 md:py-14">
+        <div className="mb-6">
+          <Link
+            to="/my-appointments"
+            className="inline-flex items-center gap-2 text-gray-700 hover:text-pink-700 font-semibold"
+          >
+            <ArrowLeft size={18} />
+            Back to My Appointments
+          </Link>
+        </div>
 
-        <input
-          name="customer_phone"
-          placeholder="Phone"
-          value={formData.customer_phone}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        />
+        {loading ? (
+          <div className="bg-white rounded-3xl shadow-sm border p-10 text-center">
+            <p className="text-gray-600 text-lg">
+              Loading appointment details...
+            </p>
+          </div>
+        ) : (
+          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+            <div className="bg-gradient-to-br from-pink-50 via-white to-orange-50 px-6 md:px-8 py-6 border-b">
+              <h2 className="text-2xl font-bold">Update Request</h2>
+              <p className="text-gray-600 mt-1">
+                After submitting changes, your appointment status will be set to
+                pending for admin review.
+              </p>
+            </div>
 
-        <input
-          type="date"
-          name="appointment_date"
-          min={new Date().toISOString().split("T")[0]}
-          value={formData.appointment_date}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        />
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-5 p-6 md:p-8"
+            >
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select Service
+                </label>
 
-        <input
-          type="time"
-          name="appointment_time"
-          value={formData.appointment_time}
-          onChange={handleChange}
-          required
-          className="border border-gray-300 rounded-lg px-4 py-3"
-        />
+                <select
+                  name="service_id"
+                  value={formData.service_id}
+                  onChange={handleChange}
+                  required
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                >
+                  <option value="">Select Service</option>
+                  {services.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        <textarea
-          name="notes"
-          placeholder="Notes"
-          value={formData.notes || ""}
-          onChange={handleChange}
-          rows="3"
-          className="border border-gray-300 rounded-lg px-4 py-3 md:col-span-2"
-        ></textarea>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Customer Name
+                </label>
 
-        <textarea
-          name="fabric_details"
-          placeholder="Fabric Details"
-          value={formData.fabric_details || ""}
-          onChange={handleChange}
-          rows="3"
-          className="border border-gray-300 rounded-lg px-4 py-3 md:col-span-2"
-        ></textarea>
+                <input
+                  name="customer_name"
+                  placeholder="Enter your name"
+                  value={formData.customer_name}
+                  onChange={handleChange}
+                  required
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                />
+              </div>
 
-        <textarea
-          name="design_preferences"
-          placeholder="Design Preferences"
-          value={formData.design_preferences || ""}
-          onChange={handleChange}
-          rows="3"
-          className="border border-gray-300 rounded-lg px-4 py-3 md:col-span-2"
-        ></textarea>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Email
+                </label>
 
-        <textarea
-          name="alteration_details"
-          placeholder="Alteration Details"
-          value={formData.alteration_details || ""}
-          onChange={handleChange}
-          rows="3"
-          className="border border-gray-300 rounded-lg px-4 py-3 md:col-span-2"
-        ></textarea>
+                <input
+                  type="email"
+                  name="customer_email"
+                  placeholder="Enter your email"
+                  value={formData.customer_email || ""}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                />
+              </div>
 
-        <button
-          type="submit"
-          className="bg-zinc-900 text-white rounded-lg px-6 py-3 hover:bg-zinc-700 md:col-span-2"
-        >
-          Submit Update Request
-        </button>
-      </form>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Phone
+                </label>
+
+                <input
+                  name="customer_phone"
+                  placeholder="Enter your phone number"
+                  value={formData.customer_phone}
+                  onChange={handleChange}
+                  required
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Appointment Date
+                </label>
+
+                <div className="relative">
+                  <CalendarDays
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-700"
+                  />
+
+                  <input
+                    type="date"
+                    name="appointment_date"
+                    min={new Date().toISOString().split("T")[0]}
+                    value={formData.appointment_date}
+                    onChange={handleChange}
+                    required
+                    className="w-full border border-gray-300 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Appointment Time
+                </label>
+
+                <div className="relative">
+                  <Clock
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-700"
+                  />
+
+                  <input
+                    type="time"
+                    name="appointment_time"
+                    value={formData.appointment_time}
+                    onChange={handleChange}
+                    required
+                    className="w-full border border-gray-300 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                  />
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Notes
+                </label>
+
+                <div className="relative">
+                  <FileText
+                    size={18}
+                    className="absolute left-4 top-4 text-pink-700"
+                  />
+
+                  <textarea
+                    name="notes"
+                    placeholder="Add any special notes"
+                    value={formData.notes || ""}
+                    onChange={handleChange}
+                    rows="3"
+                    className="w-full border border-gray-300 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Fabric Details
+                </label>
+
+                <div className="relative">
+                  <Shirt
+                    size={18}
+                    className="absolute left-4 top-4 text-pink-700"
+                  />
+
+                  <textarea
+                    name="fabric_details"
+                    placeholder="Mention fabric type, color, or material details"
+                    value={formData.fabric_details || ""}
+                    onChange={handleChange}
+                    rows="3"
+                    className="w-full border border-gray-300 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Design Preferences
+                </label>
+
+                <div className="relative">
+                  <FileText
+                    size={18}
+                    className="absolute left-4 top-4 text-pink-700"
+                  />
+
+                  <textarea
+                    name="design_preferences"
+                    placeholder="Describe your preferred style, design, or reference idea"
+                    value={formData.design_preferences || ""}
+                    onChange={handleChange}
+                    rows="3"
+                    className="w-full border border-gray-300 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Alteration Details
+                </label>
+
+                <textarea
+                  name="alteration_details"
+                  placeholder="Mention resizing, repair, hemming, or fitting details"
+                  value={formData.alteration_details || ""}
+                  onChange={handleChange}
+                  rows="3"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                ></textarea>
+              </div>
+
+              <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <Link
+                  to="/my-appointments"
+                  className="w-full border border-gray-300 text-gray-900 rounded-full px-6 py-3 hover:bg-gray-100 text-center font-semibold transition"
+                >
+                  Cancel
+                </Link>
+
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 w-full bg-gray-900 text-white rounded-full px-6 py-3 hover:bg-gray-700 font-semibold transition"
+                >
+                  <Save size={18} />
+                  Submit Update Request
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

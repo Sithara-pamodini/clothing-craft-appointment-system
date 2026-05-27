@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { Link } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  Plus,
+  Users,
+  Mail,
+  ShieldCheck,
+  Clock,
+} from "lucide-react";
 
 function AdminCustomers() {
   const [customers, setCustomers] = useState([]);
@@ -37,6 +45,17 @@ function AdminCustomers() {
     }
   };
 
+  const getRoleBadgeClass = (role) => {
+    switch (role) {
+      case "admin":
+        return "bg-purple-100 text-purple-800";
+      case "customer":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   const handleAvailabilityChange = async (userId, availabilityStatus) => {
     try {
       await api.put(`/users/${userId}/availability`, {
@@ -66,174 +85,203 @@ function AdminCustomers() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-5 md:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">
-          Manage Customers
-        </h1>
+    <div className="min-h-screen bg-[#fffaf7] text-gray-900">
+      {/* Header */}
+      <section className="bg-gradient-to-br from-pink-50 via-white to-orange-50 border-b">
+        <div className="max-w-7xl mx-auto px-4 py-14 md:py-16">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <div>
+              <p className="uppercase tracking-[0.3em] text-sm text-pink-700 font-semibold mb-4">
+                Admin Panel
+              </p>
 
-        <Link
-          to="/admin/users/add"
-          className="bg-zinc-900 text-white px-5 py-2 rounded-lg hover:bg-zinc-700 text-center"
-        >
-          Add User
-        </Link>
-      </div>
+              <h1 className="text-3xl md:text-5xl font-bold mb-4">
+                Manage Users
+              </h1>
 
-      {loading ? (
-        <div className="bg-white rounded-xl shadow-md p-8 text-center">
-          <p className="text-gray-600">Loading customers...</p>
-        </div>
-      ) : customers.length === 0 ? (
-        <p className="text-gray-600">No customers found.</p>
-      ) : (
-        <>
-          <div className="hidden lg:block overflow-x-auto">
-            <table className="w-full border border-gray-200 table-fixed">
-              <thead className="bg-zinc-900 text-white">
-                <tr>
-                  <th className="p-3 text-left w-[22%]">Name</th>
-                  <th className="p-3 text-left w-[30%]">Email</th>
-                  <th className="p-3 text-left w-[12%]">Role</th>
-                  <th className="p-3 text-left w-[24%]">Availability</th>
-                  <th className="p-3 text-left w-[12%]">Action</th>
-                </tr>
-              </thead>
+              <p className="text-gray-600 text-base md:text-lg max-w-2xl">
+                Manage customer accounts, admin users, roles, and staff
+                availability for Nilu Fashion.
+              </p>
+            </div>
 
-              <tbody>
-                {customers.map((customer) => (
-                  <tr key={customer.id} className="border-t">
-                    <td className="p-3 align-middle break-words">
-                      {customer.name}
-                    </td>
-
-                    <td className="p-3 align-middle break-all">
-                      {customer.email}
-                    </td>
-
-                    <td className="p-3 align-middle capitalize">
-                      {customer.role}
-                    </td>
-
-                    <td className="p-3 align-middle">
-                      <div className="flex flex-col gap-2">
-                        <span
-                          className={`capitalize px-3 py-1 rounded-full text-sm w-fit ${getAvailabilityBadgeClass(
-                            customer.availability_status
-                          )}`}
-                        >
-                          {customer.availability_status || "available"}
-                        </span>
-
-                        <select
-                          value={customer.availability_status || "available"}
-                          onChange={(e) =>
-                            handleAvailabilityChange(
-                              customer.id,
-                              e.target.value
-                            )
-                          }
-                          className="border border-gray-300 rounded-lg px-3 py-2"
-                        >
-                          <option value="available">Available</option>
-                          <option value="busy">Busy</option>
-                          <option value="unavailable">Unavailable</option>
-                        </select>
-                      </div>
-                    </td>
-
-                    <td className="p-3 align-middle">
-                      <div className="flex items-center gap-2">
-                        <Link
-                          to={`/admin/users/edit/${customer.id}`}
-                          title="Edit User"
-                          className="w-9 h-9 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center"
-                        >
-                          <Pencil size={18} />
-                        </Link>
-
-                        <button
-                          onClick={() => handleDelete(customer.id)}
-                          title="Delete User"
-                          className="w-9 h-9 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center justify-center"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <Link
+              to="/admin/users/add"
+              className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition"
+            >
+              <Plus size={18} />
+              Add User
+            </Link>
           </div>
+        </div>
+      </section>
 
-          <div className="lg:hidden space-y-4">
-            {customers.map((customer) => (
-              <div
-                key={customer.id}
-                className="border border-gray-200 rounded-lg p-4 shadow-sm"
+      {/* Content */}
+      <section className="max-w-7xl mx-auto px-4 py-12 md:py-16">
+        {loading ? (
+          <div className="bg-white rounded-3xl shadow-sm border p-10 text-center">
+            <p className="text-gray-600 text-lg">Loading users...</p>
+          </div>
+        ) : customers.length === 0 ? (
+          <div className="bg-white rounded-3xl shadow-sm border p-8 md:p-12 text-center">
+            <div className="flex flex-col items-center justify-center py-10">
+              <div className="w-20 h-20 rounded-full bg-pink-50 flex items-center justify-center mb-5">
+                <Users size={38} className="text-pink-700" />
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-3">
+                No Users Found
+              </h2>
+
+              <p className="text-gray-500 text-center max-w-md mb-6">
+                No customer or admin users have been added yet. Start by adding
+                a new user account.
+              </p>
+
+              <Link
+                to="/admin/users/add"
+                className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition"
               >
-                <h3 className="font-bold text-lg mb-2 break-words">
-                  {customer.name}
-                </h3>
+                <Plus size={18} />
+                Add User
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+              <div>
+                <p className="uppercase tracking-[0.25em] text-sm text-pink-700 font-semibold mb-2">
+                  User List
+                </p>
 
-                <div className="text-sm space-y-3">
-                  <p className="break-all">
-                    <strong>Email:</strong> {customer.email}
-                  </p>
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  System Users
+                </h2>
+              </div>
 
-                  <p className="capitalize">
-                    <strong>Role:</strong> {customer.role}
-                  </p>
+              <div className="bg-white border rounded-2xl px-5 py-4 shadow-sm">
+                <p className="text-sm text-gray-500">Total Users</p>
+                <p className="text-2xl font-bold">{customers.length}</p>
+              </div>
+            </div>
 
-                  <div>
-                    <p className="mb-2">
-                      <strong>Availability:</strong>{" "}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+              {customers.map((customer) => (
+                <div
+                  key={customer.id}
+                  className="bg-white rounded-3xl shadow-sm border hover:shadow-lg transition overflow-hidden"
+                >
+                  <div className="bg-gradient-to-br from-pink-50 via-white to-orange-50 p-6 border-b">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-sm text-pink-700 font-semibold mb-2">
+                          User #{customer.id}
+                        </p>
+
+                        <h3 className="font-bold text-2xl break-words">
+                          {customer.name}
+                        </h3>
+                      </div>
+
                       <span
-                        className={`capitalize px-3 py-1 rounded-full text-sm ${getAvailabilityBadgeClass(
-                          customer.availability_status
+                        className={`capitalize px-4 py-2 rounded-full text-sm font-semibold w-fit whitespace-nowrap ${getRoleBadgeClass(
+                          customer.role
                         )}`}
                       >
-                        {customer.availability_status || "available"}
+                        {customer.role}
                       </span>
-                    </p>
+                    </div>
+                  </div>
 
-                    <select
-                      value={customer.availability_status || "available"}
-                      onChange={(e) =>
-                        handleAvailabilityChange(customer.id, e.target.value)
-                      }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                    >
-                      <option value="available">Available</option>
-                      <option value="busy">Busy</option>
-                      <option value="unavailable">Unavailable</option>
-                    </select>
+                  <div className="p-6">
+                    <div className="space-y-4 mb-6">
+                      <div className="flex items-start gap-3 bg-[#fffaf7] rounded-2xl p-4 border">
+                        <Mail size={20} className="text-pink-700 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-500">Email</p>
+                          <p className="font-semibold break-all">
+                            {customer.email}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 bg-[#fffaf7] rounded-2xl p-4 border">
+                        <ShieldCheck
+                          size={20}
+                          className="text-pink-700 mt-0.5"
+                        />
+                        <div>
+                          <p className="text-sm text-gray-500">Role</p>
+                          <span
+                            className={`capitalize inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeClass(
+                              customer.role
+                            )}`}
+                          >
+                            {customer.role}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 bg-[#fffaf7] rounded-2xl p-4 border">
+                        <Clock size={20} className="text-pink-700 mt-0.5" />
+                        <div className="w-full">
+                          <p className="text-sm text-gray-500 mb-2">
+                            Availability
+                          </p>
+
+                          <span
+                            className={`capitalize inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 ${getAvailabilityBadgeClass(
+                              customer.availability_status
+                            )}`}
+                          >
+                            {customer.availability_status || "available"}
+                          </span>
+
+                          <select
+                            value={customer.availability_status || "available"}
+                            onChange={(e) =>
+                              handleAvailabilityChange(
+                                customer.id,
+                                e.target.value
+                              )
+                            }
+                            className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200"
+                          >
+                            <option value="available">Available</option>
+                            <option value="busy">Busy</option>
+                            <option value="unavailable">Unavailable</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <Link
+                        to={`/admin/users/edit/${customer.id}`}
+                        title="Edit User"
+                        className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-3 rounded-full hover:bg-gray-700 font-semibold transition"
+                      >
+                        <Pencil size={17} />
+                        Edit
+                      </Link>
+
+                      <button
+                        onClick={() => handleDelete(customer.id)}
+                        title="Delete User"
+                        className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full hover:bg-red-700 font-semibold transition"
+                      >
+                        <Trash2 size={17} />
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="flex gap-2 mt-4">
-                  <Link
-                    to={`/admin/users/edit/${customer.id}`}
-                    title="Edit User"
-                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center"
-                  >
-                    <Pencil size={18} />
-                  </Link>
-
-                  <button
-                    onClick={() => handleDelete(customer.id)}
-                    title="Delete User"
-                    className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center justify-center"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+              ))}
+            </div>
+          </>
+        )}
+      </section>
     </div>
   );
 }

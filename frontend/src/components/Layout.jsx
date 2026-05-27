@@ -5,7 +5,7 @@ function Layout({ children }) {
     <div className="min-h-screen bg-gray-100">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="w-full">
         {children}
       </main>
     </div>

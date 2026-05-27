@@ -19,6 +19,7 @@ import RequestRefund from "./pages/RequestRefund";
 import Reports from "./pages/Reports";
 import AddUser from "./pages/AddUser";
 import EditUser from "./pages/EditUser";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -31,7 +32,8 @@ function App() {
         element={
           <Layout>
             <Routes>
-              <Route path="/" element={<Services />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
               <Route path="/book-appointment" element={<AppointmentForm />} />
               <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
               <Route path="/admin/appointments" element={<ProtectedRoute adminOnly={true}><AdminAppointments /></ProtectedRoute>} />
