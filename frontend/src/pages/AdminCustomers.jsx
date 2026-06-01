@@ -9,11 +9,15 @@ import {
   Mail,
   ShieldCheck,
   Clock,
+  Eye,
+  X,
+  User,
 } from "lucide-react";
 
 function AdminCustomers() {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const loadCustomers = () => {
     api
@@ -166,72 +170,65 @@ function AdminCustomers() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
-              {customers.map((customer) => (
+            {/* Mobile and Tablet Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:hidden">
+              {customers.map((customer, index) => (
                 <div
                   key={customer.id}
-                  className="bg-white rounded-3xl shadow-sm border hover:shadow-lg transition overflow-hidden"
+                  className="bg-white border rounded-3xl shadow-sm overflow-hidden"
                 >
-                  <div className="bg-gradient-to-br from-pink-50 via-white to-orange-50 p-6 border-b">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-sm text-pink-700 font-semibold mb-2">
-                          User #{customer.id}
-                        </p>
+                  <div className="bg-gray-900 text-white px-5 py-4 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-pink-300 font-bold mb-1">
+                        User #{index + 1}
+                      </p>
 
-                        <h3 className="font-bold text-2xl break-words">
-                          {customer.name}
-                        </h3>
-                      </div>
+                      <h3 className="text-lg font-bold break-words">
+                        {customer.name || "N/A"}
+                      </h3>
 
-                      <span
-                        className={`capitalize px-4 py-2 rounded-full text-sm font-semibold w-fit whitespace-nowrap ${getRoleBadgeClass(
-                          customer.role
-                        )}`}
-                      >
-                        {customer.role}
-                      </span>
+                      <p className="text-sm text-gray-300 mt-1 break-all">
+                        {customer.email || "No email"}
+                      </p>
                     </div>
+
+                    <span
+                      className={`capitalize px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${getRoleBadgeClass(
+                        customer.role
+                      )}`}
+                    >
+                      {customer.role || "N/A"}
+                    </span>
                   </div>
 
-                  <div className="p-6">
-                    <div className="space-y-4 mb-6">
-                      <div className="flex items-start gap-3 bg-[#fffaf7] rounded-2xl p-4 border">
-                        <Mail size={20} className="text-pink-700 mt-0.5" />
-                        <div>
-                          <p className="text-sm text-gray-500">Email</p>
-                          <p className="font-semibold break-all">
-                            {customer.email}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 bg-[#fffaf7] rounded-2xl p-4 border">
+                  <div className="p-5 space-y-4">
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="flex items-start gap-3 bg-[#fffaf7] border rounded-2xl p-4">
                         <ShieldCheck
-                          size={20}
+                          size={18}
                           className="text-pink-700 mt-0.5"
                         />
                         <div>
                           <p className="text-sm text-gray-500">Role</p>
                           <span
-                            className={`capitalize inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeClass(
+                            className={`capitalize inline-block mt-1 px-3 py-1 rounded-full text-xs font-bold ${getRoleBadgeClass(
                               customer.role
                             )}`}
                           >
-                            {customer.role}
+                            {customer.role || "N/A"}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 bg-[#fffaf7] rounded-2xl p-4 border">
-                        <Clock size={20} className="text-pink-700 mt-0.5" />
+                      <div className="flex items-start gap-3 bg-[#fffaf7] border rounded-2xl p-4">
+                        <Clock size={18} className="text-pink-700 mt-0.5" />
                         <div className="w-full">
                           <p className="text-sm text-gray-500 mb-2">
                             Availability
                           </p>
 
                           <span
-                            className={`capitalize inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 ${getAvailabilityBadgeClass(
+                            className={`capitalize inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 ${getAvailabilityBadgeClass(
                               customer.availability_status
                             )}`}
                           >
@@ -256,32 +253,311 @@ function AdminCustomers() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="flex items-center justify-end gap-3 pt-2">
+                      <button
+                        onClick={() =>
+                          setSelectedCustomer({
+                            ...customer,
+                            display_number: index + 1,
+                          })
+                        }
+                        title="View User"
+                        aria-label="View User"
+                        className="inline-flex items-center justify-center w-11 h-11 bg-pink-700 text-white rounded-full hover:bg-pink-800 transition"
+                      >
+                        <Eye size={18} />
+                      </button>
+
                       <Link
                         to={`/admin/users/edit/${customer.id}`}
                         title="Edit User"
-                        className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-3 rounded-full hover:bg-gray-700 font-semibold transition"
+                        aria-label="Edit User"
+                        className="inline-flex items-center justify-center w-11 h-11 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
                       >
-                        <Pencil size={17} />
-                        Edit
+                        <Pencil size={18} />
                       </Link>
 
                       <button
                         onClick={() => handleDelete(customer.id)}
                         title="Delete User"
-                        className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full hover:bg-red-700 font-semibold transition"
+                        aria-label="Delete User"
+                        className="inline-flex items-center justify-center w-11 h-11 bg-red-600 text-white rounded-full hover:bg-red-700 transition"
                       >
-                        <Trash2 size={17} />
-                        Delete
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block bg-white rounded-3xl border shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-900 text-white">
+                    <tr>
+                      <th className="px-5 py-4 text-sm font-semibold">No.</th>
+                      <th className="px-5 py-4 text-sm font-semibold">
+                        Name
+                      </th>
+                      <th className="px-5 py-4 text-sm font-semibold">
+                        Email
+                      </th>
+                      <th className="px-5 py-4 text-sm font-semibold">
+                        Role
+                      </th>
+                      <th className="px-5 py-4 text-sm font-semibold">
+                        Availability
+                      </th>
+                      <th className="px-5 py-4 text-sm font-semibold text-center">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-200">
+                    {customers.map((customer, index) => (
+                      <tr
+                        key={customer.id}
+                        className="hover:bg-pink-50/60 transition"
+                      >
+                        <td className="px-5 py-5 align-middle">
+                          <span className="font-bold text-pink-700">
+                            {index + 1}
+                          </span>
+                        </td>
+
+                        <td className="px-5 py-5 align-middle">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
+                              <User size={17} className="text-pink-700" />
+                            </div>
+
+                            <div>
+                              <p className="font-bold text-gray-900 break-words">
+                                {customer.name || "N/A"}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                User account
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-5 align-middle">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Mail size={15} className="text-pink-700" />
+                            <span className="font-medium break-all">
+                              {customer.email || "No email"}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-5 align-middle">
+                          <span
+                            className={`capitalize inline-flex px-3 py-1 rounded-full text-xs font-bold ${getRoleBadgeClass(
+                              customer.role
+                            )}`}
+                          >
+                            {customer.role || "N/A"}
+                          </span>
+                        </td>
+
+                        <td className="px-5 py-5 align-middle">
+                          <div className="flex flex-col gap-2 max-w-[190px]">
+                            <span
+                              className={`capitalize inline-flex w-fit px-3 py-1 rounded-full text-xs font-bold ${getAvailabilityBadgeClass(
+                                customer.availability_status
+                              )}`}
+                            >
+                              {customer.availability_status || "available"}
+                            </span>
+
+                            <select
+                              value={
+                                customer.availability_status || "available"
+                              }
+                              onChange={(e) =>
+                                handleAvailabilityChange(
+                                  customer.id,
+                                  e.target.value
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200"
+                            >
+                              <option value="available">Available</option>
+                              <option value="busy">Busy</option>
+                              <option value="unavailable">Unavailable</option>
+                            </select>
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-5 align-middle">
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() =>
+                                setSelectedCustomer({
+                                  ...customer,
+                                  display_number: index + 1,
+                                })
+                              }
+                              title="View User"
+                              aria-label="View User"
+                              className="inline-flex items-center justify-center w-10 h-10 bg-pink-700 text-white rounded-full hover:bg-pink-800 transition"
+                            >
+                              <Eye size={17} />
+                            </button>
+
+                            <Link
+                              to={`/admin/users/edit/${customer.id}`}
+                              title="Edit User"
+                              aria-label="Edit User"
+                              className="inline-flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+                            >
+                              <Pencil size={17} />
+                            </Link>
+
+                            <button
+                              onClick={() => handleDelete(customer.id)}
+                              title="Delete User"
+                              aria-label="Delete User"
+                              className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition"
+                            >
+                              <Trash2 size={17} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </>
         )}
       </section>
+
+      {selectedCustomer && (
+        <CustomerDetailsModal
+          customer={selectedCustomer}
+          onClose={() => setSelectedCustomer(null)}
+          getRoleBadgeClass={getRoleBadgeClass}
+          getAvailabilityBadgeClass={getAvailabilityBadgeClass}
+        />
+      )}
+    </div>
+  );
+}
+
+function CustomerDetailsModal({
+  customer,
+  onClose,
+  getRoleBadgeClass,
+  getAvailabilityBadgeClass,
+}) {
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 px-4 py-6 flex items-center justify-center">
+      <div className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b px-6 py-5 rounded-t-3xl flex items-start justify-between gap-4">
+          <div>
+            <p className="uppercase tracking-[0.25em] text-xs text-pink-700 font-semibold mb-2">
+              User Details
+            </p>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              User #{customer.display_number}
+            </h2>
+
+            <p className="text-gray-500 mt-1">
+              Full account information for this system user.
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition shrink-0"
+            title="Close"
+            aria-label="Close"
+          >
+            <X size={22} />
+          </button>
+        </div>
+
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <DetailBox
+              icon={<User size={19} />}
+              label="Name"
+              value={customer.name || "N/A"}
+            />
+
+            <DetailBox
+              icon={<Mail size={19} />}
+              label="Email"
+              value={customer.email || "No email"}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <StatusBox
+              label="Role"
+              value={customer.role || "N/A"}
+              className={getRoleBadgeClass(customer.role)}
+            />
+
+            <StatusBox
+              label="Availability"
+              value={customer.availability_status || "available"}
+              className={getAvailabilityBadgeClass(
+                customer.availability_status
+              )}
+            />
+          </div>
+
+          <div className="mt-7 flex flex-col sm:flex-row justify-end gap-3">
+            <Link
+              to={`/admin/users/edit/${customer.id}`}
+              className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white rounded-full px-6 py-3 hover:bg-gray-700 font-semibold transition"
+            >
+              <Pencil size={17} />
+              Edit User
+            </Link>
+
+            <button
+              onClick={onClose}
+              className="inline-flex items-center justify-center gap-2 bg-gray-100 text-gray-900 rounded-full px-6 py-3 hover:bg-gray-200 font-semibold transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailBox({ icon, label, value }) {
+  return (
+    <div className="bg-[#fffaf7] border rounded-2xl p-4 flex items-start gap-3">
+      <div className="text-pink-700 mt-0.5">{icon}</div>
+      <div>
+        <p className="text-sm text-gray-500 mb-1">{label}</p>
+        <p className="font-semibold text-gray-900 break-words">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function StatusBox({ label, value, className }) {
+  return (
+    <div className="border rounded-2xl p-4">
+      <p className="text-sm text-gray-500 mb-2">{label}</p>
+      <span
+        className={`capitalize inline-flex px-3 py-1 rounded-full text-xs font-bold ${className}`}
+      >
+        {value}
+      </span>
     </div>
   );
 }
